@@ -38,6 +38,8 @@ export class Program {
 
 	
 	static async uiInstall(lang = 'en'){
+		//console.clear()
+		process.stdout.write("\x1Bc") // win7 support
 		console.clear()
 		process.title = 'KwRuntime Installer'
 		
@@ -98,7 +100,7 @@ export class Program {
 		
 		console.info(`
 
-\x1b[32m${toWrite.join("\n\n")}\x1b[0m
+\x1b[32m\x1b[1m${toWrite.join("\n\n")}\x1b[0m
 
 
 \x1b[33m> ${langs[lang].installing}\x1b[0m`) 
@@ -130,6 +132,7 @@ export class Program {
 
 
 		for(let file of files){
+			
 			let out = Path.join(kwruntimeFolder, file.path)
 			let response = await axios({
 				method:'GET',
@@ -155,8 +158,8 @@ export class Program {
 		}
 
 
-		let nodeversion = process.version.split(".")
-		if(nodeversion[0] < "14"){
+		let nodeversion = process.version.split(".").map((a) => Number((a[0] == "v") ? a.substring(1) : a))
+		if(nodeversion[0] < 14){
 			// download nodejs 
 			let nodeInfo = platformData.node[arch]
 			if(!nodeInfo){
@@ -173,9 +176,6 @@ export class Program {
 			if(!installable){
 				throw Exception.create(`${langs[lang].nofiles}: ${Os.platform}-${arch}`).putCode("UNSUPPORTED_PLATFORM")	
 			}
-
-			
-
 			/*nodefolder = Path.join(nodefolder, arch)
 			if(!fs.existsSync(nodefolder)) fs.mkdirSync(nodefolder)*/
 
@@ -239,7 +239,7 @@ export class Program {
 		
 		let majorversion = folders.map(convertVersion).sort().reverse()[0]
 		if(!majorversion){
-			throw Exception.create(`${langs[lang].notnodejs}`).putCode("NODEJS_NOT_FOUN")	
+			throw Exception.create(`${langs[lang].notnodejs}`).putCode("NODEJS_NOT_FOUND")	
 		}
 
 		let nodeexe =  Path.join(bin, arch, bynumber[majorversion], "node")
@@ -247,7 +247,10 @@ export class Program {
 
 		let def = new async.Deferred<void>()
 		let p = Child.spawn(nodeexe, [Path.join(runtime, "kwruntime.js"), "--self-install"], {
-			stdio:'inherit'
+			stdio:'inherit',
+			env: Object.assign({}, process.env, {
+				NODE_SKIP_PLATFORM_CHECK: "1"
+			})
 		})
 		p.once("exit", def.resolve)
 		p.once("error", def.reject)

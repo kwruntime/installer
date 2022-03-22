@@ -7,6 +7,6 @@ export class Program{
 			target:'node'
 		})
 		await builder.compile(Path.join(__dirname, "mod.ts"))
-		await builder.writeTo(Path.join(__dirname, "..", "dist", "mod.js"))
+		await builder.writeTo(Path.join(__dirname, "..", "transpiled", "mod.js"))
 	}
 }

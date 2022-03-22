@@ -1,11 +1,11 @@
 {
 	"name": "@kwruntime/installer",
-	"version": "0.0.2",
+	"version": "0.0.9",
 	"description": "Script for install @kwruntime/core from node.js on all supported os",
 	"bin": {
-        "kwrun": "./cli.js"
+        "installer": "./cli.js"
     },
-	"main": "./main.js",
+	"main": "./transpiled/mod.js",
 	"devDependencies": {
 		"@kwruntime/core": "^1.x"
 	}
