@@ -1,6 +1,6 @@
 {
 	"name": "@kwruntime/installer",
-	"version": "0.0.9",
+	"version": "0.0.11",
 	"description": "Script for install @kwruntime/core from node.js on all supported os",
 	"bin": {
         "installer": "./cli.js"

@@ -48,6 +48,11 @@ export class Program {
 			this.logo(lang)
 			await this.install(lang)
 
+		}
+		catch(e){
+			console.error("\x1b[31m\x1b[1m" + langs[lang].onerror + ":\x1b[0m", e.message)
+		}
+		finally{
 			// write a button for close
 			let text = langs[lang].finished.text
 			let button = "  " + langs[lang].finished.button + "  "
@@ -58,11 +63,6 @@ export class Program {
 			process.stdin.setRawMode(true)
 			process.stdin.resume()
 			process.stdin.on("data", process.exit.bind(process,0))
-
-		}
-		catch(e){
-			console.error("\x1b[31m\x1b[1m" + langs[lang].onerror + ":\x1b[0m", e.message)
-			console.info()
 		}
 
 	}
@@ -237,7 +237,7 @@ export class Program {
 			return value
 		}
 		
-		let majorversion = folders.map(convertVersion).sort().reverse()[0]
+		let majorversion = folders.map(convertVersion).sort((a,b) => a - b).reverse()[0]
 		if(!majorversion){
 			throw Exception.create(`${langs[lang].notnodejs}`).putCode("NODEJS_NOT_FOUND")	
 		}
